@@ -1381,4 +1381,12 @@ ${bodyHTML}
 
 function resetForm() {
   document.getElementById('results').style.display = 'none';
-  docume
+  document.getElementById('email').value = '';
+  document.getElementById('website').value = '';
+  document.getElementById('brief').value = '';
+  hideError();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
