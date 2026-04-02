@@ -1,0 +1,1384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IntakeIQ — Sprout</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --yellow: #F5C518;
+    --yellow-dim: #c49a0e;
+    --white: #f5f5f0;
+    --gray: #1a1a1a;
+    --gray2: #2a2a2a;
+    --gray3: #444;
+    --text-muted: #888;
+    --red: #ff4444;
+    --green: #22c55e;
+    --orange: #f97316;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* GRID BACKGROUND */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(245,197,24,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(245,197,24,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* HEADER */
+  header {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 48px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 22px;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .logo-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--yellow);
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .logo-sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--yellow);
+    font-weight: 400;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border: 1px solid rgba(245,197,24,0.3);
+    padding: 3px 8px;
+    border-radius: 3px;
+  }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    z-index: 10;
+    padding: 80px 48px 60px;
+    max-width: 900px;
+  }
+
+  .hero-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--yellow);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .hero-tag::before {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: var(--yellow);
+  }
+
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(40px, 6vw, 72px);
+    font-weight: 800;
+    line-height: 1.0;
+    letter-spacing: -2px;
+    margin-bottom: 24px;
+  }
+
+  .hero h1 span {
+    color: var(--yellow);
+  }
+
+  .hero p {
+    font-size: 16px;
+    color: var(--text-muted);
+    max-width: 520px;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  /* MAIN LAYOUT */
+  .main {
+    position: relative;
+    z-index: 10;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    background: rgba(255,255,255,0.04);
+    border-top: 1px solid rgba(255,255,255,0.06);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    margin-bottom: 80px;
+  }
+
+  /* FORM PANEL */
+  .form-panel {
+    background: var(--black);
+    padding: 56px 48px;
+  }
+
+  .panel-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .panel-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255,255,255,0.08);
+  }
+
+  .field {
+    margin-bottom: 28px;
+  }
+
+  .field label {
+    display: block;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+
+  .field label span {
+    color: var(--yellow);
+    margin-left: 2px;
+  }
+
+  .field input,
+  .field textarea {
+    width: 100%;
+    background: var(--gray);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 6px;
+    padding: 14px 16px;
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    resize: vertical;
+  }
+
+  .field input:focus,
+  .field textarea:focus {
+    border-color: var(--yellow);
+    box-shadow: 0 0 0 3px rgba(245,197,24,0.08);
+  }
+
+  .field input::placeholder,
+  .field textarea::placeholder {
+    color: var(--gray3);
+  }
+
+  .field textarea {
+    min-height: 120px;
+    line-height: 1.6;
+  }
+
+  .field-hint {
+    font-size: 12px;
+    color: var(--gray3);
+    margin-top: 8px;
+    line-height: 1.5;
+  }
+
+  .api-key-row {
+    display: flex;
+    gap: 8px;
+  }
+
+  .api-key-row input {
+    flex: 1;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+  }
+
+  .btn-show {
+    background: var(--gray2);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: var(--text-muted);
+    padding: 0 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .btn-show:hover { color: var(--white); border-color: rgba(255,255,255,0.2); }
+
+  .divider-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 24px 0;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--gray3);
+    letter-spacing: 2px;
+  }
+
+  .divider-label::before,
+  .divider-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255,255,255,0.06);
+  }
+
+  .btn-submit {
+    width: 100%;
+    background: var(--yellow);
+    color: var(--black);
+    border: none;
+    border-radius: 6px;
+    padding: 18px 24px;
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 8px;
+  }
+
+  .btn-submit:hover:not(:disabled) {
+    background: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 32px rgba(245,197,24,0.25);
+  }
+
+  .btn-submit:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .btn-submit .spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(0,0,0,0.3);
+    border-top-color: var(--black);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    display: none;
+  }
+
+  .btn-submit.loading .spinner { display: block; }
+  .btn-submit.loading .btn-text { opacity: 0.7; }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* INFO PANEL */
+  .info-panel {
+    background: var(--gray);
+    padding: 56px 48px;
+    border-left: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .what-you-get {
+    margin-top: 8px;
+  }
+
+  .output-block {
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+
+  .output-block-header {
+    background: rgba(255,255,255,0.04);
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .output-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-weight: 500;
+  }
+
+  .badge-sales { background: rgba(245,197,24,0.15); color: var(--yellow); }
+  .badge-client { background: rgba(34,197,94,0.15); color: var(--green); }
+
+  .output-block-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+  }
+
+  .output-block-body {
+    padding: 16px 18px;
+  }
+
+  .output-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  .output-item::before {
+    content: '→';
+    color: var(--yellow);
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .output-item.green::before { color: var(--green); }
+
+  .sprout-note {
+    margin-top: 32px;
+    padding: 20px;
+    background: rgba(245,197,24,0.05);
+    border: 1px solid rgba(245,197,24,0.12);
+    border-radius: 8px;
+  }
+
+  .sprout-note-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--yellow);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .sprout-note p {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  /* ERROR */
+  .error-bar {
+    display: none;
+    background: rgba(255,68,68,0.1);
+    border: 1px solid rgba(255,68,68,0.3);
+    border-radius: 6px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: #ff8888;
+    margin-top: 16px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* RESULTS */
+  #results {
+    display: none;
+    position: relative;
+    z-index: 10;
+    padding: 0 48px 80px;
+  }
+
+  .results-header {
+    margin-bottom: 40px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: gap;
+    gap: 20px;
+  }
+
+  .results-meta {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+
+  .results-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -1px;
+  }
+
+  .results-title span { color: var(--yellow); }
+
+  .btn-new {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.15);
+    color: var(--text-muted);
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .btn-new:hover { border-color: var(--yellow); color: var(--yellow); }
+
+  .results-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  /* DOCUMENT CARDS */
+  .doc-card {
+    background: var(--gray);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .doc-card-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .doc-card-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .doc-card-title h3 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+  }
+
+  .doc-card-body {
+    padding: 24px;
+    max-height: 600px;
+    overflow-y: auto;
+  }
+
+  .doc-card-body::-webkit-scrollbar { width: 4px; }
+  .doc-card-body::-webkit-scrollbar-track { background: transparent; }
+  .doc-card-body::-webkit-scrollbar-thumb { background: var(--gray3); border-radius: 2px; }
+
+  .btn-export {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.12);
+    color: var(--text-muted);
+    padding: 7px 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn-export:hover { border-color: var(--yellow); color: var(--yellow); }
+
+  /* DOCUMENT CONTENT STYLES */
+  .doc-section {
+    margin-bottom: 24px;
+  }
+
+  .doc-section-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .doc-section p {
+    font-size: 13px;
+    color: rgba(245,245,240,0.8);
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  /* SCORECARD */
+  .scorecard {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .score-item {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 6px;
+    padding: 12px 14px;
+  }
+
+  .score-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .score-value {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+  }
+
+  .score-high { color: var(--green); }
+  .score-medium { color: var(--yellow); }
+  .score-low { color: var(--red); }
+
+  /* VERDICT */
+  .verdict-block {
+    border-radius: 8px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .verdict-pursue { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.25); }
+  .verdict-review { background: rgba(245,197,24,0.1); border: 1px solid rgba(245,197,24,0.25); }
+  .verdict-pass { background: rgba(255,68,68,0.1); border: 1px solid rgba(255,68,68,0.25); }
+
+  .verdict-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+
+  .verdict-value {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 22px;
+    letter-spacing: -0.5px;
+  }
+
+  .verdict-pursue .verdict-value { color: var(--green); }
+  .verdict-review .verdict-value { color: var(--yellow); }
+  .verdict-pass .verdict-value { color: var(--red); }
+
+  .score-total {
+    font-family: 'DM Mono', monospace;
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--white);
+  }
+
+  .score-total span {
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+
+  /* RED FLAGS */
+  .flag-item {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-size: 13px;
+    color: rgba(245,245,240,0.7);
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  .flag-icon { color: var(--red); flex-shrink: 0; margin-top: 2px; }
+
+  /* FEATURES LIST */
+  .feature-item {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    padding: 10px 12px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 5px;
+  }
+
+  .feature-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--yellow);
+    flex-shrink: 0;
+    padding-top: 1px;
+  }
+
+  .feature-content strong {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 2px;
+  }
+
+  .feature-content span {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 300;
+    line-height: 1.5;
+  }
+
+  /* TIMELINE */
+  .timeline-phase {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 14px;
+    align-items: flex-start;
+  }
+
+  .phase-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--yellow);
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 5px;
+  }
+
+  .phase-content strong {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 2px;
+  }
+
+  .phase-content span {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 300;
+  }
+
+  /* TECH STACK */
+  .stack-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .stack-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    padding: 5px 10px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 4px;
+    color: var(--white);
+  }
+
+  /* OUT OF SCOPE */
+  .scope-item {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 8px;
+    font-size: 13px;
+    color: var(--text-muted);
+    font-weight: 300;
+  }
+
+  .scope-item::before {
+    content: '✕';
+    color: var(--red);
+    font-size: 11px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* LOADING STATE */
+  .loading-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10,10,10,0.9);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .loading-overlay.active { display: flex; }
+
+  .loading-dots {
+    display: flex;
+    gap: 8px;
+  }
+
+  .loading-dots span {
+    width: 8px;
+    height: 8px;
+    background: var(--yellow);
+    border-radius: 50%;
+    animation: pulse 1.2s ease-in-out infinite;
+  }
+
+  .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes pulse {
+    0%, 80%, 100% { opacity: 0.2; transform: scale(0.8); }
+    40% { opacity: 1; transform: scale(1); }
+  }
+
+  .loading-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--text-muted);
+    letter-spacing: 2px;
+  }
+
+  .loading-status {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--yellow);
+    letter-spacing: 1px;
+    opacity: 0.7;
+  }
+
+  /* FOOTER */
+  footer {
+    position: relative;
+    z-index: 10;
+    padding: 24px 48px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  footer p {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--gray3);
+    letter-spacing: 1px;
+  }
+
+  footer a { color: var(--yellow); text-decoration: none; }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    header { padding: 20px 24px; }
+    .hero { padding: 48px 24px 40px; }
+    .main { grid-template-columns: 1fr; }
+    .form-panel, .info-panel { padding: 40px 24px; }
+    #results { padding: 0 24px 60px; }
+    .results-grid { grid-template-columns: 1fr; }
+    .scorecard { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- LOADING OVERLAY -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-dots">
+    <span></span><span></span><span></span>
+  </div>
+  <div class="loading-text">ANALYZING SUBMISSION</div>
+  <div class="loading-status" id="loadingStatus">Reading business context...</div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <span class="logo-dot"></span>
+    sprout
+  </div>
+  <div class="logo-sub">IntakeIQ</div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag">AI-Powered Client Qualification</div>
+  <h1>Submit your brief.<br><span>Get your answer</span><br>in 30 seconds.</h1>
+  <p>Paste your website URL or describe what you need. Our AI analyzes your brief and generates a full qualification report — instantly.</p>
+</div>
+
+<!-- MAIN FORM + INFO -->
+<div class="main">
+  <div class="form-panel">
+    <div class="panel-label">Client Submission</div>
+
+    <div class="field">
+      <label>API Key <span>*</span></label>
+      <div class="api-key-row">
+        <input type="password" id="apiKey" placeholder="sk-ant-api03-..." />
+        <button class="btn-show" onclick="toggleApiKey()">SHOW</button>
+      </div>
+      <div class="field-hint">Your Anthropic API key. Not stored anywhere.</div>
+    </div>
+
+    <div class="divider-label">submission details</div>
+
+    <div class="field">
+      <label>Email Address <span>*</span></label>
+      <input type="email" id="email" placeholder="you@company.com" />
+    </div>
+
+    <div class="field">
+      <label>Company Website URL</label>
+      <input type="url" id="website" placeholder="https://yourcompany.com" />
+      <div class="field-hint">Optional if you provide a project brief below.</div>
+    </div>
+
+    <div class="field">
+      <label>Project Brief</label>
+      <textarea id="brief" placeholder="Describe what you need built. Goals, challenges, budget range, timeline, current stack — the more detail, the sharper the analysis."></textarea>
+      <div class="field-hint">Optional if you provide a website URL above. Both together gives the best result.</div>
+    </div>
+
+    <button class="btn-submit" id="submitBtn" onclick="handleSubmit()">
+      <div class="spinner"></div>
+      <span class="btn-text">Analyze &amp; Generate Reports</span>
+    </button>
+
+    <div class="error-bar" id="errorBar"></div>
+  </div>
+
+  <div class="info-panel">
+    <div class="panel-label">What You'll Receive</div>
+    <div class="what-you-get">
+
+      <div class="output-block">
+        <div class="output-block-header">
+          <span class="output-badge badge-sales">Sales Team</span>
+          <span class="output-block-title">Qualification Document</span>
+        </div>
+        <div class="output-block-body">
+          <div class="output-item">Executive summary of the client and their request</div>
+          <div class="output-item">Business Scorecard — budget signal, complexity, strategic fit, urgency</div>
+          <div class="output-item">Overall score out of 10 with PURSUE / REVIEW / PASS verdict</div>
+          <div class="output-item">Red flags and risk signals to watch</div>
+          <div class="output-item">Recommended next step for the sales team</div>
+        </div>
+      </div>
+
+      <div class="output-block">
+        <div class="output-block-header">
+          <span class="output-badge badge-client">Client-Facing</span>
+          <span class="output-block-title">Product Requirements Doc</span>
+        </div>
+        <div class="output-block-body">
+          <div class="output-item green">Project overview and problem statement</div>
+          <div class="output-item green">Proposed solution at high level</div>
+          <div class="output-item green">Core features list (5-7 features)</div>
+          <div class="output-item green">Out of scope items — clear boundaries</div>
+          <div class="output-item green">Recommended tech stack</div>
+          <div class="output-item green">Estimated project timeline in phases</div>
+        </div>
+      </div>
+
+      <div class="sprout-note">
+        <div class="sprout-note-title">About Sprout</div>
+        <p>Fully integrated digital product and AI company. 170 specialists across product, engineering, data, design, and AI. All directly employed — no marketplace, no subcontracting.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div id="results">
+  <div class="results-header">
+    <div>
+      <div class="results-meta" id="resultsMeta"></div>
+      <div class="results-title">Analysis <span>Complete</span></div>
+    </div>
+    <button class="btn-new" onclick="resetForm()">← New Submission</button>
+  </div>
+
+  <div class="results-grid">
+    <!-- SALES DOC -->
+    <div class="doc-card" id="salesCard">
+      <div class="doc-card-header">
+        <div class="doc-card-title">
+          <span class="output-badge badge-sales">Sales</span>
+          <h3>Qualification Document</h3>
+        </div>
+        <button class="btn-export" onclick="exportDoc('sales')">
+          ↓ Export HTML
+        </button>
+      </div>
+      <div class="doc-card-body" id="salesBody"></div>
+    </div>
+
+    <!-- PRD -->
+    <div class="doc-card" id="prdCard">
+      <div class="doc-card-header">
+        <div class="doc-card-title">
+          <span class="output-badge badge-client">Client</span>
+          <h3>Product Requirements Doc</h3>
+        </div>
+        <button class="btn-export" onclick="exportDoc('prd')">
+          ↓ Export HTML
+        </button>
+      </div>
+      <div class="doc-card-body" id="prdBody"></div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p>IntakeIQ by <a href="#">sprout</a> — AI-Powered Client Qualification</p>
+  <p><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="573f323b3b3817242725382223793438793e33">[email&#160;protected]</a></p>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+let analysisData = null;
+let submissionInfo = {};
+
+function toggleApiKey() {
+  const input = document.getElementById('apiKey');
+  const btn = event.target;
+  if (input.type === 'password') {
+    input.type = 'text';
+    btn.textContent = 'HIDE';
+  } else {
+    input.type = 'password';
+    btn.textContent = 'SHOW';
+  }
+}
+
+function showError(msg) {
+  const bar = document.getElementById('errorBar');
+  bar.textContent = '⚠ ' + msg;
+  bar.style.display = 'block';
+}
+
+function hideError() {
+  document.getElementById('errorBar').style.display = 'none';
+}
+
+function setLoading(active, status = '') {
+  const overlay = document.getElementById('loadingOverlay');
+  const btn = document.getElementById('submitBtn');
+  if (active) {
+    overlay.classList.add('active');
+    btn.disabled = true;
+    btn.classList.add('loading');
+    if (status) document.getElementById('loadingStatus').textContent = status;
+  } else {
+    overlay.classList.remove('active');
+    btn.disabled = false;
+    btn.classList.remove('loading');
+  }
+}
+
+async function handleSubmit() {
+  hideError();
+
+  const apiKey = document.getElementById('apiKey').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const website = document.getElementById('website').value.trim();
+  const brief = document.getElementById('brief').value.trim();
+
+  if (!apiKey) return showError('Please enter your Anthropic API key.');
+  if (!email) return showError('Email address is required.');
+  if (!website && !brief) return showError('Please provide a website URL or project brief (or both).');
+
+  submissionInfo = { email, website, brief, timestamp: new Date().toLocaleString() };
+
+  setLoading(true, 'Reading business context...');
+
+  const statusMessages = [
+    'Analyzing company profile...',
+    'Evaluating strategic fit with Sprout...',
+    'Scoring budget and complexity signals...',
+    'Drafting Sales Qualification Document...',
+    'Building Product Requirements Document...',
+    'Finalizing reports...'
+  ];
+
+  let msgIdx = 0;
+  const statusInterval = setInterval(() => {
+    msgIdx = (msgIdx + 1) % statusMessages.length;
+    document.getElementById('loadingStatus').textContent = statusMessages[msgIdx];
+  }, 2500);
+
+  try {
+    const prompt = buildPrompt(email, website, brief);
+    const response = await callClaude(apiKey, prompt);
+    clearInterval(statusInterval);
+
+    const parsed = parseResponse(response);
+    analysisData = parsed;
+
+    renderResults(parsed);
+    setLoading(false);
+
+    document.getElementById('results').style.display = 'block';
+    document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+
+  } catch (err) {
+    clearInterval(statusInterval);
+    setLoading(false);
+    showError(err.message || 'Something went wrong. Check your API key and try again.');
+  }
+}
+
+function buildPrompt(email, website, brief) {
+  return `You are an expert senior business analyst and solutions architect at Sprout — a fully integrated digital product and AI company based in Indonesia and Singapore.
+
+Sprout's capabilities:
+- DISCOVER: Competitive mapping, revenue model design, tech stack audit, market research, data strategy
+- BUILD: Web & mobile products, custom software, data platforms, API/systems integration, AI/ML development
+- EMBED: Agent & LLM deployment, AI workflow automation, internal knowledge systems, embedded data teams
+- OPERATE: Team augmentation, dedicated squads, CTO/CPO advisory, 24/7 production support
+- SCALE: Multi-market expansion, regulatory compliance, platform performance, Series A-C tech prep
+
+Sprout's ideal clients: companies in e-commerce, fintech, FMCG, healthcare, logistics, agritech, or manufacturing that need serious technology built fast. They value outcome-based engagement, not billable hours.
+
+A prospective client has submitted an intake form:
+- Email: ${email}
+- Website URL: ${website || 'Not provided'}
+- Project Brief: ${brief || 'Not provided'}
+
+Analyze this submission thoroughly and return a JSON object with EXACTLY this structure (no markdown, no explanation, raw JSON only):
+
+{
+  "sales": {
+    "executive_summary": "3-4 sentence summary of who this client is, what they do, and what they're asking for",
+    "company_name": "Inferred company name or 'Unknown'",
+    "industry": "Inferred industry",
+    "scorecard": {
+      "budget_signal": "Low|Medium|High",
+      "project_complexity": "Simple|Medium|Complex",
+      "strategic_fit": "Low|Medium|High",
+      "urgency": "Low|Medium|High"
+    },
+    "overall_score": 7,
+    "verdict": "PURSUE|REVIEW|PASS",
+    "verdict_reason": "1-2 sentence explanation of the verdict",
+    "red_flags": ["flag 1", "flag 2", "flag 3"],
+    "next_step": "One concrete recommended action for the Sprout sales team"
+  },
+  "prd": {
+    "project_title": "Short project name",
+    "project_overview": "2-3 sentences describing the project and problem being solved",
+    "proposed_solution": "2-3 sentences describing the high-level solution Sprout would build",
+    "core_features": [
+      {"name": "Feature Name", "description": "One line description"},
+      {"name": "Feature Name", "description": "One line description"},
+      {"name": "Feature Name", "description": "One line description"},
+      {"name": "Feature Name", "description": "One line description"},
+      {"name": "Feature Name", "description": "One line description"}
+    ],
+    "out_of_scope": ["item 1", "item 2", "item 3", "item 4"],
+    "tech_stack": ["Technology 1", "Technology 2", "Technology 3", "Technology 4", "Technology 5"],
+    "timeline": [
+      {"phase": "Discovery", "duration": "2-3 weeks", "description": "What happens in this phase"},
+      {"phase": "Design & Architecture", "duration": "2-4 weeks", "description": "What happens"},
+      {"phase": "Build", "duration": "8-12 weeks", "description": "What happens"},
+      {"phase": "Launch & Handover", "duration": "2 weeks", "description": "What happens"}
+    ]
+  }
+}`;
+}
+
+async function callClaude(apiKey, prompt) {
+  const response = await fetch('/api/proxy', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01'
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 2000,
+      messages: [{ role: 'user', content: prompt }]
+    })
+  });
+
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}));
+    throw new Error(err.error?.message || `API error: ${response.status}`);
+  }
+
+  const data = await response.json();
+  return data.content[0].text;
+}
+
+function parseResponse(text) {
+  const clean = text.replace(/```json|```/g, '').trim();
+  return JSON.parse(clean);
+}
+
+function getScoreClass(value) {
+  const v = value?.toLowerCase();
+  if (v === 'high' || v === 'pursue' || v === 'simple') return 'score-high';
+  if (v === 'medium' || v === 'review') return 'score-medium';
+  return 'score-low';
+}
+
+function getVerdictClass(verdict) {
+  const v = verdict?.toUpperCase();
+  if (v === 'PURSUE') return 'verdict-pursue';
+  if (v === 'REVIEW') return 'verdict-review';
+  return 'verdict-pass';
+}
+
+function renderResults(data) {
+  const { sales, prd } = data;
+
+  // Meta
+  document.getElementById('resultsMeta').textContent =
+    `${sales.company_name} · ${sales.industry} · ${submissionInfo.timestamp}`;
+
+  // SALES BODY
+  const salesBody = document.getElementById('salesBody');
+  salesBody.innerHTML = `
+    <div class="doc-section">
+      <div class="doc-section-title">Executive Summary</div>
+      <p>${sales.executive_summary}</p>
+    </div>
+
+    <div class="doc-section">
+      <div class="doc-section-title">Business Scorecard</div>
+      <div class="scorecard">
+        <div class="score-item">
+          <div class="score-label">Budget Signal</div>
+          <div class="score-value ${getScoreClass(sales.scorecard.budget_signal)}">${sales.scorecard.budget_signal}</div>
+        </div>
+        <div class="score-item">
+          <div class="score-label">Complexity</div>
+          <div class="score-value ${getScoreClass(sales.scorecard.project_complexity)}">${sales.scorecard.project_complexity}</div>
+        </div>
+        <div class="score-item">
+          <div class="score-label">Strategic Fit</div>
+          <div class="score-value ${getScoreClass(sales.scorecard.strategic_fit)}">${sales.scorecard.strategic_fit}</div>
+        </div>
+        <div class="score-item">
+          <div class="score-label">Urgency</div>
+          <div class="score-value ${getScoreClass(sales.scorecard.urgency)}">${sales.scorecard.urgency}</div>
+        </div>
+      </div>
+      <div class="verdict-block ${getVerdictClass(sales.verdict)}">
+        <div>
+          <div class="verdict-label">Verdict</div>
+          <div class="verdict-value">${sales.verdict}</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:4px;font-weight:300;max-width:200px">${sales.verdict_reason}</div>
+        </div>
+        <div class="score-total">${sales.overall_score}<span>/10</span></div>
+      </div>
+    </div>
+
+    <div class="doc-section">
+      <div class="doc-section-title">Red Flags</div>
+      ${sales.red_flags.map(f => `<div class="flag-item"><span class="flag-icon">⚑</span>${f}</div>`).join('')}
+    </div>
+
+    <div class="doc-section">
+      <div class="doc-section-title">Recommended Next Step</div>
+      <p>${sales.next_step}</p>
+    </div>
+  `;
+
+  // PRD BODY
+  const prdBody = document.getElementById('prdBody');
+  prdBody.innerHTML = `
+    <div class="doc-section">
+      <div class="doc-section-title">Project Overview</div>
+      <p>${prd.project_overview}</p>
+    </div>
+
+    <div class="doc-section">
+      <div class="doc-section-title">Proposed Solution</div>
+      <p>${prd.proposed_solution}</p>
+    </div>
+
+    <div class="doc-section">
+      <div class="doc-section-title">Core Features</div>
+      ${prd.core_features.map((f, i) => `
+        <div class="feature-item">
+          <div class="feature-num">0${i+1}</div>
+          <div class="feature-content">
+            <strong>${f.name}</strong>
+            <span>${f.description}</span>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="doc-section">
+      <div class="doc-section-title">Out of Scope</div>
+      ${prd.out_of_scope.map(s => `<div class="scope-item">${s}</div>`).join('')}
+    </div>
+
+    <div class="doc-section">
+      <div class="doc-section-title">Tech Stack</div>
+      <div class="stack-tags">
+        ${prd.tech_stack.map(t => `<span class="stack-tag">${t}</span>`).join('')}
+      </div>
+    </div>
+
+    <div class="doc-section">
+      <div class="doc-section-title">Estimated Timeline</div>
+      ${prd.timeline.map(t => `
+        <div class="timeline-phase">
+          <div class="phase-dot"></div>
+          <div class="phase-content">
+            <strong>${t.phase} <span style="color:var(--yellow);font-weight:400">${t.duration}</span></strong>
+            <span>${t.description}</span>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function exportDoc(type) {
+  if (!analysisData) return;
+
+  const { sales, prd } = analysisData;
+  const isS = type === 'sales';
+  const title = isS ? `Qualification Document — ${sales.company_name}` : `PRD — ${prd.project_title}`;
+  const bodyHTML = isS
+    ? document.getElementById('salesBody').innerHTML
+    : document.getElementById('prdBody').innerHTML;
+
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>${title}</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--black:#0a0a0a;--yellow:#F5C518;--white:#f5f5f0;--gray:#1a1a1a;--gray2:#2a2a2a;--gray3:#444;--text-muted:#888;--red:#ff4444;--green:#22c55e}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--black);color:var(--white);font-family:'DM Sans',sans-serif;padding:48px;max-width:800px;margin:0 auto}
+  header{display:flex;align-items:center;justify-content:space-between;margin-bottom:40px;padding-bottom:24px;border-bottom:1px solid rgba(255,255,255,0.08)}
+  .logo{font-family:'Syne',sans-serif;font-weight:800;font-size:18px}
+  .logo-dot{width:7px;height:7px;background:var(--yellow);border-radius:50%;display:inline-block;margin-right:6px}
+  .doc-title{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;letter-spacing:-1px;margin-bottom:6px}
+  .doc-meta{font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted);letter-spacing:1px;margin-bottom:40px}
+  .doc-section{margin-bottom:28px}
+  .doc-section-title{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,0.06)}
+  .doc-section p{font-size:13px;color:rgba(245,245,240,0.8);line-height:1.7;font-weight:300}
+  .scorecard{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+  .score-item{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:6px;padding:12px 14px}
+  .score-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--text-muted);text-transform:uppercase;margin-bottom:6px}
+  .score-value{font-family:'Syne',sans-serif;font-weight:700;font-size:15px}
+  .score-high{color:var(--green)}.score-medium{color:var(--yellow)}.score-low{color:var(--red)}
+  .verdict-block{border-radius:8px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+  .verdict-pursue{background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.25)}
+  .verdict-review{background:rgba(245,197,24,0.1);border:1px solid rgba(245,197,24,0.25)}
+  .verdict-pass{background:rgba(255,68,68,0.1);border:1px solid rgba(255,68,68,0.25)}
+  .verdict-label{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase}
+  .verdict-value{font-family:'Syne',sans-serif;font-weight:800;font-size:22px;letter-spacing:-0.5px}
+  .verdict-pursue .verdict-value{color:var(--green)}.verdict-review .verdict-value{color:var(--yellow)}.verdict-pass .verdict-value{color:var(--red)}
+  .score-total{font-family:'DM Mono',monospace;font-size:28px;font-weight:500;color:var(--white)}
+  .score-total span{font-size:14px;color:var(--text-muted)}
+  .flag-item{display:flex;gap:10px;margin-bottom:10px;font-size:13px;color:rgba(245,245,240,0.7);line-height:1.6;font-weight:300}
+  .flag-icon{color:var(--red);flex-shrink:0;margin-top:2px}
+  .feature-item{display:flex;gap:10px;margin-bottom:10px;padding:10px 12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:5px}
+  .feature-num{font-family:'DM Mono',monospace;font-size:11px;color:var(--yellow);flex-shrink:0;padding-top:1px}
+  .feature-content strong{display:block;font-size:13px;font-weight:500;margin-bottom:2px}
+  .feature-content span{font-size:12px;color:var(--text-muted);font-weight:300;line-height:1.5}
+  .timeline-phase{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start}
+  .phase-dot{width:8px;height:8px;background:var(--yellow);border-radius:50%;flex-shrink:0;margin-top:5px}
+  .phase-content strong{display:block;font-size:13px;font-weight:500;margin-bottom:2px}
+  .phase-content span{font-size:12px;color:var(--text-muted);font-weight:300}
+  .stack-tags{display:flex;flex-wrap:wrap;gap:8px}
+  .stack-tag{font-family:'DM Mono',monospace;font-size:11px;padding:5px 10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:4px;color:var(--white)}
+  .scope-item{display:flex;gap:10px;margin-bottom:8px;font-size:13px;color:var(--text-muted);font-weight:300}
+  .scope-item::before{content:'✕';color:var(--red);font-size:11px;flex-shrink:0;margin-top:2px}
+  footer{margin-top:48px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.06);font-family:'DM Mono',monospace;font-size:10px;color:var(--gray3);letter-spacing:1px;display:flex;justify-content:space-between}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo"><span class="logo-dot"></span>sprout</div>
+  <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-muted);letter-spacing:2px">INTAKEIQ · ${new Date().toLocaleDateString()}</div>
+</header>
+<div class="doc-title">${title}</div>
+<div class="doc-meta">${submissionInfo.email} · ${submissionInfo.website || 'No URL'} · ${submissionInfo.timestamp}</div>
+${bodyHTML}
+<footer>
+  <span>Generated by IntakeIQ — Sprout</span>
+  <span>hello@sprout.co.id</span>
+</footer>
+</body>
+</html>`;
+
+  const blob = new Blob([html], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${type === 'sales' ? 'sales-doc' : 'prd'}-${sales.company_name.toLowerCase().replace(/\s+/g,'-')}-${Date.now()}.html`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function resetForm() {
+  document.getElementById('results').style.display = 'none';
+  docume
