@@ -411,4 +411,11 @@ function exportDoc(type) {
 
 function resetForm() {
   document.getElementById('results').style.display = 'none';
-  document.getElementById('formView').style.
+  document.getElementById('formView').style.display = 'block';
+  ['firstName','lastName','email','phone','website','brief'].forEach(id => document.getElementById(id).value = '');
+  hideError();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
